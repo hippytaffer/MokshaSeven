@@ -1,0 +1,386 @@
+/////////////////////////////////////////////////////////////////////////////
+/***MOD: MEM **/
+
+images
+{
+   image: "widget_bg.png" COMP;
+   image: "widget_fg.png" COMP;
+   image: "mem_gauge.png" COMP;
+   image: "clock/e17_clock_minutes_40.png" COMP;
+   image: "clock/e17_clock_minutes_41.png" COMP;
+   image: "clock/e17_clock_minutes_42.png" COMP;
+   image: "clock/e17_clock_minutes_43.png" COMP;
+   image: "clock/e17_clock_minutes_44.png" COMP;
+   image: "clock/e17_clock_minutes_45.png" COMP;
+   image: "clock/e17_clock_minutes_46.png" COMP;
+   image: "clock/e17_clock_minutes_47.png" COMP;
+   image: "clock/e17_clock_minutes_48.png" COMP;
+   image: "clock/e17_clock_minutes_49.png" COMP;
+   image: "clock/e17_clock_minutes_50.png" COMP;
+   image: "clock/e17_clock_minutes_51.png" COMP;
+   image: "clock/e17_clock_minutes_52.png" COMP;
+   image: "clock/e17_clock_minutes_53.png" COMP;
+   image: "clock/e17_clock_minutes_54.png" COMP;
+   image: "clock/e17_clock_minutes_55.png" COMP;
+   image: "clock/e17_clock_minutes_56.png" COMP;
+   image: "clock/e17_clock_minutes_57.png" COMP;
+   image: "clock/e17_clock_minutes_58.png" COMP;
+   image: "clock/e17_clock_minutes_59.png" COMP;
+   image: "clock/e17_clock_minutes_00.png" COMP;
+   image: "clock/e17_clock_minutes_01.png" COMP;
+   image: "clock/e17_clock_minutes_02.png" COMP;
+   image: "clock/e17_clock_minutes_03.png" COMP;
+   image: "clock/e17_clock_minutes_04.png" COMP;
+   image: "clock/e17_clock_minutes_05.png" COMP;
+   image: "clock/e17_clock_minutes_06.png" COMP;
+   image: "clock/e17_clock_minutes_07.png" COMP;
+   image: "clock/e17_clock_minutes_08.png" COMP;
+   image: "clock/e17_clock_minutes_09.png" COMP;
+   image: "clock/e17_clock_minutes_10.png" COMP;
+   image: "clock/e17_clock_minutes_11.png" COMP;
+   image: "clock/e17_clock_minutes_12.png" COMP;
+   image: "clock/e17_clock_minutes_13.png" COMP;
+   image: "clock/e17_clock_minutes_14.png" COMP;
+   image: "clock/e17_clock_minutes_15.png" COMP;
+   image: "clock/e17_clock_minutes_16.png" COMP;
+   image: "clock/e17_clock_minutes_17.png" COMP;
+   image: "clock/e17_clock_minutes_18.png" COMP;
+   image: "clock/e17_clock_minutes_19.png" COMP;
+   image: "clock/e17_clock_minutes_20.png" COMP;
+}
+
+group {
+	name: "modules/mem/main";
+	min: 4 4;
+//	max: 128 128;
+	script 
+	  {
+	   public message(Msg_Type:type, id, ...) 
+	       {
+		       new Float:val;
+	  		   new convert;		       
+	           new buf[11];
+			
+			if ((type == MSG_FLOAT) && (id == 1)) 
+		    {	       
+	           buf[0] = 0;			   
+			   
+			   val = getfarg(2);
+			   convert = round(val*20);
+	  		   convert = convert + 40;
+			   if (convert < 10) {snprintf(buf, 10, "0%i", convert);}
+	 		   else {snprintf(buf, 10,  "%i", convert);}	
+		       set_state(PART:"realdial", buf, 0.0);
+		    }
+			
+		  if ((type == MSG_FLOAT) && (id == 2)) 
+		    {		       
+	           buf[0] = 0;			   
+			   
+			   val = getfarg(2);
+			   convert = round(val*-20);
+			   convert = 19 + convert;
+			   if (convert < 10) {snprintf(buf, 10, "0%i", convert);}
+	 		   else {snprintf(buf, 10,  "%i", convert);}	
+		       set_state(PART:"swapdial", buf, 0.0);
+		    }		  
+	       }	     
+	  }
+	
+   parts {
+      part {
+	 name: "base";
+	 clip_to: "fade_clip";
+	 description {
+	    state: "default" 0.0;
+	    align: 0.5 0.5;
+	    aspect: 1.0 1.0;
+	    aspect_preference: BOTH;
+	    rel1 {
+	       relative: 0.0 0.0;
+	    }
+	    rel2 {
+	       relative: 1.0 1.0;
+	    }
+	    image {
+	       normal: "widget_bg.png";
+	    }
+	 }
+      }
+	 part {
+	 name: "base_overlay";
+	 clip_to: "fade_clip";
+	 description {
+	    state: "default" 0.0;
+	    align: 0.5 0.5;
+	    aspect: 1.0 1.0;
+	    aspect_preference: BOTH;
+	    rel1 {
+	       relative: 0.0 0.0;
+	    }
+	    rel2 {
+	       relative: 1.0 1.0;
+	    }
+	    image {
+	       normal: "mem_gauge.png";
+	    }
+	 }
+      }
+      part {
+	 name: "overlay";
+	 clip_to: "fade_clip";
+	 description {
+	    state: "default" 0.0;
+	    aspect: 1.0 1.0;
+	    aspect_preference: BOTH;
+	    rel1 {
+	       to: "base";
+	    }
+	    rel2 {
+	       to: "base";
+	    }
+	    image {
+	       normal: "widget_fg.png";
+	    }
+	 }
+      }
+      part {
+	 name:           "real_label";
+	 type:           TEXT;
+	 effect:  SOFT_SHADOW;
+	 mouse_events: 0;
+	 description {
+	    state: "default" 0.0;
+		color: 255 255 255 0;
+		color3: 0 0 0 0;
+		visible: 0;
+	    align: 0.5 0.5;
+		rel1 {
+	       relative: 0.5  0.45;
+		   offset:  0 0;
+		   to: "fade_clip";
+	    }
+	    rel2 {
+	       relative: 0.5  0.45;
+		   offset:  0 0;
+		   to: "fade_clip";
+	    }
+
+	    text {
+	       font:     "Edje-Vera-Bold";
+		   text: "Real";
+	       size:     10;
+	       min:      1 1;
+	       align:    0.5 0.5;
+	       ellipsis: -1;
+           text_class: "module_small";	       
+	    }
+	 }
+	 description
+	 {
+	 	state: "visible" 0.0;
+		inherit: "default" 0.0;
+		visible: 1;
+	    color: 221 221 221 255;
+	    color3: 0 0 0 64;
+		color_class: "module_label";
+	 }
+      }
+      part {
+	 name:           "fade_clip";
+	 type:           RECT;
+//	 mouse_events:   0;
+	 description {
+	    state: "default" 0.0;
+	    color: 255 255 255 255;
+	 }
+	 description {
+	    state: "faded" 0.0;
+	    color: 255 255 255 1;
+	 }
+      }
+
+      part {
+	 name: "realdial";
+	 mouse_events: 0;
+	 description {
+	    state: "default" 0.0;
+	    aspect: 1.0 1.0;
+	    aspect_preference: BOTH;
+	    rel1 {
+	       relative: 0.05 0.05;
+	    }
+	    rel2 {
+	       relative: 0.95 0.95;
+	    }
+	    image {
+	       normal: "clock/e17_clock_minutes_00.png";
+	    }
+	 }
+#ifdef HANDREAL
+# undef HANDREAL
+#endif
+#define HANDREAL(num) \
+	    description { \
+	       state: num 0.0; \
+	       inherit: "default" 0.0; \
+	       image { \
+		  normal: "clock/e17_clock_minutes_"num".png"; \
+	       } \
+	    }
+	 HANDREAL("40")
+	 HANDREAL("41")
+	 HANDREAL("42")
+	 HANDREAL("43")
+	 HANDREAL("44")
+	 HANDREAL("45")
+	 HANDREAL("46")
+	 HANDREAL("47")
+	 HANDREAL("48")
+	 HANDREAL("49")
+	 HANDREAL("50")
+	 HANDREAL("51")
+	 HANDREAL("52")
+	 HANDREAL("53")
+	 HANDREAL("54")
+	 HANDREAL("55")
+	 HANDREAL("56")
+	 HANDREAL("57")
+	 HANDREAL("58")
+	 HANDREAL("59")
+	 HANDREAL("00")
+      } // realdial part
+
+      part {
+	 name: "swapdial";
+	 mouse_events: 0;
+	 description {
+	    state: "default" 0.0;
+	    aspect: 1.0 1.0;
+	    aspect_preference: BOTH;
+	    rel1 {
+	       relative: 0.05 0.05;
+	    }
+	    rel2 {
+	       relative: 0.95 0.95;
+	    }
+	    image {
+	       normal: "clock/e17_clock_minutes_00.png";
+	    }
+	 }
+#ifdef HANDSWAP
+# undef HANDSWAP
+#endif
+#define HANDSWAP(num) \
+	    description { \
+	       state: num 0.0; \
+	       inherit: "default" 0.0; \
+	       image { \
+		  normal: "clock/e17_clock_minutes_"num".png"; \
+	       } \
+	    }
+	 HANDSWAP("01")
+	 HANDSWAP("02")
+	 HANDSWAP("03")
+	 HANDSWAP("04")
+	 HANDSWAP("05")
+	 HANDSWAP("06")
+	 HANDSWAP("07")
+	 HANDSWAP("08")
+	 HANDSWAP("09")
+	 HANDSWAP("10")
+	 HANDSWAP("11")
+	 HANDSWAP("12")
+	 HANDSWAP("13")
+	 HANDSWAP("14")
+	 HANDSWAP("15")
+	 HANDSWAP("16")
+	 HANDSWAP("17")
+	 HANDSWAP("18")
+	 HANDSWAP("19")
+	 HANDSWAP("20")
+      } // swapdial part
+	 part {
+	 name:           "swap_label";
+	 type:           TEXT;
+	 effect:  SOFT_SHADOW;
+	 mouse_events: 0;
+	 description {
+	    state: "default" 0.0;
+		color: 255 255 255 0;
+		color3: 0 0 0 0;		
+		visible: 0;
+	    align: 0.5 0.5;
+	    rel1 {
+	       relative: 0.5  0.7;
+		   offset:  0 0;
+   		   to: "fade_clip";
+	    }
+	    rel2 {
+	       relative: 0.5  0.7;
+		   offset:  0 0;
+		   to: "fade_clip";
+	    }
+
+	    text {
+		   text: "Swap";
+	       font:     "Edje-Vera-Bold";
+	       size:     10;
+	       min:      1 1;
+	       align:    0.5 0.5;
+	       ellipsis: -1;
+           text_class: "module_small";	       
+	    }
+	 }
+	 description
+	 {
+	 	state: "visible" 0.0;
+		inherit: "default" 0.0;
+		visible: 1;
+	    color: 221 221 221 255;
+	    color3: 0 0 0 64;
+	    color_class: "module_label";
+	 }
+      }
+   } // parts
+
+programs {
+	   program {
+	 name: "known";
+	 signal: "e,state,known";
+	 source: "e";
+	 action: STATE_SET "default" 0.0;
+	 target: "fade_clip";
+      }
+      program {
+	 name: "unknown";
+	 signal: "e,state,unknown";
+	 source: "e";
+	 action: STATE_SET "faded" 0.0;
+	 target: "fade_clip";
+      }
+   	     program 
+	       {
+		  name: "go_active";
+		  signal: "label_active";
+		  source: "";
+		  action: STATE_SET "visible" 0.0;
+		  transition: SINUSOIDAL 0.5;
+		  target: "real_label";
+		  target: "swap_label";
+	       }
+	     program 
+	       {
+		  name: "go_passive";
+		  signal: "label_passive";
+		  source: "";
+		  action: STATE_SET "default" 0.0;
+		  transition: SINUSOIDAL 0.5;		  
+		  target: "swap_label";
+		  target: "real_label";
+	       }
+   }
+     }
+
+
+
